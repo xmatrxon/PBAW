@@ -1,71 +1,77 @@
-<style>
-<?php include '/../style.css'; ?>
-</style>
 <?php
-// KONTROLER strony kalkulatora
+
 require_once dirname(__FILE__).'/../config.php';
 
-// W kontrolerze niczego nie wysyła się do klienta.
-// Wysłaniem odpowiedzi zajmie się odpowiedni widok.
-// Parametry do widoku przekazujemy przez zmienne.
+include _ROOT_PATH.'/app/security/check.php';
 
-// 1. pobranie parametrów
-
-$kwota = $_REQUEST ['kwota'];
-$lata = $_REQUEST ['lata'];
-$opr = $_REQUEST ['opr'];
-
-// 2. walidacja parametrów z przygotowaniem zmiennych dla widoku
-
-// sprawdzenie, czy parametry zostały przekazane
-if ( ! (isset($kwota) && isset($lata) && isset($opr))) {
-	//sytuacja wystąpi kiedy np. kontroler zostanie wywołany bezpośrednio - nie z formularza
-	$messages [] = 'Błędne wywołanie aplikacji. Brak jednego z parametrów.';
+//pobranie parametrów
+function getParams(&$kwota, &$lata, &$opr){
+	$kwota = isset($_REQUEST['kwota']) ? $_REQUEST['kwota'] : null;
+	$lata = isset($_REQUEST['lata']) ? $_REQUEST['lata'] : null;
+	$opr = isset($_REQUEST['opr']) ? $_REQUEST['opr'] : null;
 }
 
-// sprawdzenie, czy potrzebne wartości zostały przekazane
-if ( $kwota == "") {
+//walidacja parametrów
+function validate(&$kwota, &$lata, &$opr, &$messages){
+	if (!(isset($kwota) && isset($lata) && isset($opr))){
+		return false;
+	}
+
+if ($kwota == ""){
 	$messages [] = 'Nie podano kwoty';
 }
-if ( $lata == "") {
+
+if ($lata == ""){
 	$messages [] = 'Nie podano ilości lat';
 }
-if ( $opr == "") {
+
+if ($opr == ""){
 	$messages [] = 'Nie podano oprocentowania';
 }
 
-//nie ma sensu walidować dalej gdy brak parametrów
-if (empty( $messages )) {
-	
-	// sprawdzenie, czy $x i $y są liczbami całkowitymi
-	if (! is_numeric( $kwota )) {
-		$messages [] = 'Kwota nie jest liczbą całkowitą';
-	}
-	
-	if (! is_numeric( $lata )) {
-		$messages [] = 'Ilosc lat nie jest liczbą całkowitą';
-	}
-	
-	if (! is_numeric( $opr )) {
-		$messages [] = 'Oprocenowanie nie jest liczbą całkowitą';
-	}
+if (count ($messages) != 0) return false;
 
+if (! is_numeric($kwota)){
+	$messages [] = 'Podana kwota nie jest liczbą całkowitą';
 }
 
-// 3. wykonaj zadanie jeśli wszystko w porządku
+if (! is_numeric($lata)){
+	$messages [] = 'Podane lata nie są liczbą całkowitą';
+}
 
-if (empty ( $messages )) { // gdy brak błędów
-	
-	//konwersja parametrów na int
+if (! is_numeric($opr)){
+	$messages [] = 'Podane oprocentowanie nie jest liczbą całkowitą';
+}
+
+if (count($messages) !=0) return false;
+else return true;
+}
+
+//wykonywanie obliczeń
+function process(&$kwota, &$lata, &$opr, &$messages, &$result){
+	global $role;
+
 	$kwota = intval($kwota);
 	$lata = intval($lata);
 	$opr = intval($opr);
+
+	if ($role == 'admin'){
+		$result = $kwota*($opr/100)*$lata;
+	} else{
+		$messages [] = 'Tylko administrator może wykonać działanie';
+	}
 	
-	//wykonanie operacji
-	$result = $kwota*($opr/100)*$lata;
 }
 
-// 4. Wywołanie widoku z przekazaniem zmiennych
-// - zainicjowane zmienne ($messages,$x,$y,$operation,$result)
-//   będą dostępne w dołączonym skrypcie
+$kwota = null;
+$lata = null;
+$opr = null;
+$result = null;
+$messages = [];
+
+getParams($kwota, $lata, $opr);
+if (validate($kwota, $lata, $opr, $messages)){
+	process($kwota, $lata, $opr, $messages, $result);
+}
+
 include 'calc_view.php';
