@@ -2,76 +2,89 @@
 
 require_once dirname(__FILE__).'/../config.php';
 
-include _ROOT_PATH.'/app/security/check.php';
+require_once _ROOT_PATH.'/lib/smarty/Smarty.class.php';
 
-//pobranie parametrów
-function getParams(&$kwota, &$lata, &$opr){
-	$kwota = isset($_REQUEST['kwota']) ? $_REQUEST['kwota'] : null;
-	$lata = isset($_REQUEST['lata']) ? $_REQUEST['lata'] : null;
-	$opr = isset($_REQUEST['opr']) ? $_REQUEST['opr'] : null;
+
+function getParams(&$form){
+	$form['kwota'] = isset($_REQUEST['kwota']) ? $_REQUEST['kwota'] : null;
+	$form['lata'] = isset($_REQUEST['lata']) ? $_REQUEST['lata'] : null;
+	$form['opr'] = isset($_REQUEST['opr']) ? $_REQUEST['opr'] : null;
 }
 
-//walidacja parametrów
-function validate(&$kwota, &$lata, &$opr, &$messages){
-	if (!(isset($kwota) && isset($lata) && isset($opr))){
+
+function validate(&$form, &$infos, &$msgs, &$hide_intro){
+	if (!(isset($form['kwota']) && isset($form['lata']) && isset($form['opr']))){
 		return false;
 	}
 
-if ($kwota == ""){
-	$messages [] = 'Nie podano kwoty';
+$infos [] = 'Przekazano parametry.';
+
+if ($form['kwota'] == ""){
+	$msgs [] = 'Nie podano kwoty';
 }
 
-if ($lata == ""){
-	$messages [] = 'Nie podano ilości lat';
+if ($form['lata'] == ""){
+	$msgs [] = 'Nie podano ilości lat';
 }
 
-if ($opr == ""){
-	$messages [] = 'Nie podano oprocentowania';
+if ($form['opr'] == ""){
+	$msgs [] = 'Nie podano oprocentowania';
 }
 
-if (count ($messages) != 0) return false;
+if (count ($msgs) == 0) {
 
-if (! is_numeric($kwota)){
-	$messages [] = 'Podana kwota nie jest liczbą całkowitą';
+if (! is_numeric($form['kwota'])){
+	$msgs [] = 'Podana kwota nie jest liczbą całkowitą';
 }
 
-if (! is_numeric($lata)){
-	$messages [] = 'Podane lata nie są liczbą całkowitą';
+if (! is_numeric($form['lata'])){
+	$msgs [] = 'Podane lata nie są liczbą całkowitą';
 }
 
-if (! is_numeric($opr)){
-	$messages [] = 'Podane oprocentowanie nie jest liczbą całkowitą';
+if (! is_numeric($form['opr'])){
+	$msgs [] = 'Podane oprocentowanie nie jest liczbą całkowitą';
 }
 
-if (count($messages) !=0) return false;
+}
+
+if (count($msgs) > 0) return false;
 else return true;
 }
 
-//wykonywanie obliczeń
-function process(&$kwota, &$lata, &$opr, &$messages, &$result){
-	global $role;
 
-	$kwota = intval($kwota);
-	$lata = intval($lata);
-	$opr = intval($opr);
+function process(&$form, &$infos, &$msgs, &$result){
 
-	if ($role == 'admin'){
-		$result = $kwota*($opr/100)*$lata;
-	} else{
-		$messages [] = 'Tylko administrator może wykonać działanie';
-	}
+	$infos [] = 'Parametry poprawne. Wykonuję obliczenia';
+
+
+	$form['kwota'] = floatval($form['kwota']);
+	$form['lata'] = floatval($form['lata']);
+	$form['opr'] = floatval($form['opr']);
+
+	$result = $form['kwota']*($form['opr']/100)*$form['lata'];
 	
 }
 
-$kwota = null;
-$lata = null;
-$opr = null;
+$form = null;
+$infos = array();
+$messages = array();
 $result = null;
-$messages = [];
 
-getParams($kwota, $lata, $opr);
-if (validate($kwota, $lata, $opr, $messages)){
-	process($kwota, $lata, $opr, $messages, $result);
+getParams($form);
+if (validate($form,$infos,$messages,$hide_intro)){
+	process($form,$infos,$messages,$result);
 }
 
-include 'calc_view.php';
+$smarty = new Smarty();
+
+$smarty->assign('app_url',_APP_URL);
+$smarty->assign('root_path',_ROOT_PATH);
+$smarty->assign('page_description','Kalkulator oprocentowana kredytowego');
+$smarty->assign('page_title','Kalkulator');
+
+$smarty->assign('form',$form);
+$smarty->assign('result',$result);
+$smarty->assign('messages',$messages);
+$smarty->assign('infos',$infos);
+
+$smarty->display(_ROOT_PATH.'/app/calc.tpl');
