@@ -1,6 +1,6 @@
 {extends file=$conf->root_path|cat:"/templates/main.html"} {block name=content}
 
-<form action="{$conf->app_url}/app/calc.php" method="post">
+<form action="{$conf->action_root}calcCompute" method="post">
 	<div class="fields">
 		<div class="field">
 			<label for="kwota">Kwota</label>
