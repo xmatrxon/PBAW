@@ -1,9 +1,8 @@
 <?php
 
-require_once $conf->root_path.'/lib/smarty/Smarty.class.php';
-require_once $conf->root_path.'/lib/Messages.class.php';
-require_once $conf->root_path.'/app/calc/CalcForm.class.php';
-require_once $conf->root_path.'/app/calc/CalcResult.class.php';
+require_once 'CalcForm.class.php';
+require_once 'CalcResult.class.php';
+
 
 class CalcCtrl {
     private $msgs;
@@ -70,19 +69,15 @@ class CalcCtrl {
     }
 
     public function generateView(){
-        global $conf;
 
-        $smarty = new Smarty();
-        $smarty->assign('conf', $conf);
-
-        $smarty->assign('page_title','Kalkulator');
-        $smarty->assign('page_description','Kalkulator oprocentowana kredytowego');
+        getSmarty()->assign('page_title','Kalkulator');
+        getSmarty()->assign('page_description','Kalkulator oprocentowana kredytowego');
     
-        $smarty->assign('form',$this->form);
-        $smarty->assign('res',$this->result);
-        $smarty->assign('msgs',$this->msgs);
+        getSmarty()->assign('form',$this->form);
+        getSmarty()->assign('res',$this->result);
+        getSmarty()->assign('msgs',$this->msgs);
 
-        $smarty->display($conf->root_path.'/app/calc/CalcView.tpl');
+        getSmarty()->display('CalcView.tpl');
     }
 
 

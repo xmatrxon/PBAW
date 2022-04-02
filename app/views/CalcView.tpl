@@ -1,4 +1,4 @@
-{extends file=$conf->root_path|cat:"/templates/main.html"} {block name=content}
+{extends file="main.html"} {block name=content}
 
 <form action="{$conf->action_root}calcCompute" method="post">
 	<div class="fields">
