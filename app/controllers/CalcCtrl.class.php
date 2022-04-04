@@ -1,24 +1,21 @@
-<?php
+<?php namespace app\controllers;
 
-require_once 'CalcForm.class.php';
-require_once 'CalcResult.class.php';
-
+use app\forms\CalcForm;
+use app\transfer\CalcResult;
 
 class CalcCtrl {
-    private $msgs;
     private $form;
     private $result;
 
     public function __construct(){
-        $this->msgs = new Messages();
         $this->form = new CalcForm();
         $this->result = new CalcResult();
     }
 
     public function getParams(){
-        $this->form->kwota = isset($_REQUEST['kwota']) ? $_REQUEST['kwota'] : null;
-	    $this->form->lata = isset($_REQUEST['lata']) ? $_REQUEST['lata'] : null;
-	    $this->form->opr = isset($_REQUEST['opr']) ? $_REQUEST['opr'] : null;
+        $this->form->kwota = getFromRequest('kwota');
+	    $this->form->lata = getFromRequest('lata');
+	    $this->form->opr = getFromRequest('opr');
     }
 
     public function validate(){
@@ -27,31 +24,31 @@ class CalcCtrl {
 	}
 
         if ($this->form->kwota == ""){
-            $this->msgs->addError('Nie podano kwoty');
+            getMessages()->addError('Nie podano kwoty');
         }
 
         if ($this->form->lata == ""){
-            $this->msgs->addError('Nie podano ilości lat');
+            getMessages()->addError('Nie podano ilości lat');
         }
 
         if ($this->form->opr == ""){
-            $this->msgs->addError('Nie podano oprocentowania');
+            getMessages()->addError('Nie podano oprocentowania');
         }
 
-        if(!$this->msgs->isError()){
+        if(!getMessages()->isError()){
             if (! is_numeric($this->form->kwota)){
-                $this->msgs->addError('Podana kwota nie jest liczbą całkowitą');
+                getMessages()->addError('Podana kwota nie jest liczbą całkowitą');
             }
 
             if (! is_numeric($this->form->lata)){
-                $this->msgs->addError('Podane lata nie są liczbą całkowitą');
+                getMessages()->addError('Podane lata nie są liczbą całkowitą');
             }
 
             if (! is_numeric($this->form->opr)){
-                $this->msgs->addError('Podane oprocentowanie nie jest liczbą całkowitą');
+                getMessages()->addError('Podane oprocentowanie nie jest liczbą całkowitą');
             }
         }
-        return ! $this->msgs->isError();
+        return ! getMessages()->isError();
     }
 
     public function process(){
@@ -75,7 +72,6 @@ class CalcCtrl {
     
         getSmarty()->assign('form',$this->form);
         getSmarty()->assign('res',$this->result);
-        getSmarty()->assign('msgs',$this->msgs);
 
         getSmarty()->display('CalcView.tpl');
     }
