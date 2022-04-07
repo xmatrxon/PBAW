@@ -19,6 +19,6 @@
 				</section>
 			</footer>
 		</div>
-		{block name=end} Domyślna treść stopki ... {/block}
+		{block name=end}{/block}
 	</body>
 </html>

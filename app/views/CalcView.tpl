@@ -1,6 +1,15 @@
-{extends file="main.html"} {block name=content}
+{extends file="main.tpl"} {block name=content}
 
-<form action="{$conf->action_root}calcCompute" method="post">
+<div class="pure-menu pure-menu-horizontal bottom-margin">
+<ul class="actions">
+<li><a href="{$conf->action_url}logout">wyloguj</a></li>
+</ul>
+
+
+	
+</div>
+
+<form action="{$conf->action_url}calcCompute" method="post">
 	<div class="fields">
 		<div class="field">
 			<label for="kwota">Kwota</label>
@@ -39,6 +48,7 @@
 	{/foreach}
 </ol>
 {/if}
+{include file='messages.tpl'}
 {if isset($res->result)}
 <div
 	style="

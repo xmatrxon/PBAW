@@ -1,52 +1,63 @@
 <?php
-/* Smarty version 4.1.0, created on 2022-04-02 21:02:27
+/* Smarty version 4.1.0, created on 2022-04-07 18:26:17
   from 'C:\xampp\htdocs\php_01_widok_kontroler\app\views\CalcView.tpl' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '4.1.0',
-  'unifunc' => 'content_62489dc3659b92_10286953',
+  'unifunc' => 'content_624f10a94b7226_38605525',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
     'c16953bb8aaea6a7e95f507da931cdedb1ca774e' => 
     array (
       0 => 'C:\\xampp\\htdocs\\php_01_widok_kontroler\\app\\views\\CalcView.tpl',
-      1 => 1648926005,
+      1 => 1649348775,
       2 => 'file',
     ),
   ),
   'includes' => 
   array (
+    'file:messages.tpl' => 1,
   ),
 ),false)) {
-function content_62489dc3659b92_10286953 (Smarty_Internal_Template $_smarty_tpl) {
+function content_624f10a94b7226_38605525 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_loadInheritance();
 $_smarty_tpl->inheritance->init($_smarty_tpl, true);
 ?>
  <?php 
-$_smarty_tpl->inheritance->instanceBlock($_smarty_tpl, 'Block_191883363862489dc35892b0_29030490', 'content');
+$_smarty_tpl->inheritance->instanceBlock($_smarty_tpl, 'Block_1449420497624f10a949e0d1_54073496', 'content');
 ?>
  <?php 
-$_smarty_tpl->inheritance->instanceBlock($_smarty_tpl, 'Block_96854489762489dc35cd240_32185909', 'end');
+$_smarty_tpl->inheritance->instanceBlock($_smarty_tpl, 'Block_254577384624f10a94a6e76_15734027', 'end');
 ?>
 
-<?php $_smarty_tpl->inheritance->endChild($_smarty_tpl, "main.html");
+<?php $_smarty_tpl->inheritance->endChild($_smarty_tpl, "main.tpl");
 }
 /* {block 'content'} */
-class Block_191883363862489dc35892b0_29030490 extends Smarty_Internal_Block
+class Block_1449420497624f10a949e0d1_54073496 extends Smarty_Internal_Block
 {
 public $subBlocks = array (
   'content' => 
   array (
-    0 => 'Block_191883363862489dc35892b0_29030490',
+    0 => 'Block_1449420497624f10a949e0d1_54073496',
   ),
 );
 public function callBlock(Smarty_Internal_Template $_smarty_tpl) {
 ?>
 
 
-<form action="<?php echo $_smarty_tpl->tpl_vars['conf']->value->action_root;?>
+<div class="pure-menu pure-menu-horizontal bottom-margin">
+<ul class="actions">
+<li><a href="<?php echo $_smarty_tpl->tpl_vars['conf']->value->action_url;?>
+logout">wyloguj</a></li>
+</ul>
+
+
+	
+</div>
+
+<form action="<?php echo $_smarty_tpl->tpl_vars['conf']->value->action_url;?>
 calcCompute" method="post">
 	<div class="fields">
 		<div class="field">
@@ -75,12 +86,12 @@ calcCompute" method="post">
 }
 /* {/block 'content'} */
 /* {block 'end'} */
-class Block_96854489762489dc35cd240_32185909 extends Smarty_Internal_Block
+class Block_254577384624f10a94a6e76_15734027 extends Smarty_Internal_Block
 {
 public $subBlocks = array (
   'end' => 
   array (
-    0 => 'Block_96854489762489dc35cd240_32185909',
+    0 => 'Block_254577384624f10a94a6e76_15734027',
   ),
 );
 public function callBlock(Smarty_Internal_Template $_smarty_tpl) {
@@ -110,6 +121,7 @@ $_smarty_tpl->tpl_vars['err']->do_else = false;
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 </ol>
 <?php }
+$_smarty_tpl->_subTemplateRender('file:messages.tpl', $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, 0, $_smarty_tpl->cache_lifetime, array(), 0, false);
 if ((isset($_smarty_tpl->tpl_vars['res']->value->result))) {?>
 <div
 	style="
