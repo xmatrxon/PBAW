@@ -62,6 +62,18 @@ class CalcCtrl {
         $this->result->result = $this->form->kwota*($this->form->opr/100)*$this->form->lata;
         }
         
+        try {
+            getDB()->insert("wynik", [
+                "kwota" => $this->form->kwota,
+                "lata" => $this->form->lata,
+                "procent" => $this->form->opr,
+                "rata" => $this->result->result,
+                "data" => date("Y-m-d H:i:s")
+            ]);
+        } catch (\PDOException $ex) {
+            getMessages()->addError("DB Error: ".$ex->getMessages());
+        }
+
         $this->generateView();
     }
 

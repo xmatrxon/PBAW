@@ -2,7 +2,8 @@
 
 <div class="pure-menu pure-menu-horizontal bottom-margin">
 <ul class="actions">
-<li><a href="{$conf->action_url}logout">wyloguj</a></li>
+<li><a href="{$conf->action_url}logout" class="button">wyloguj</a></li>
+<li><a href="{$conf->action_url}database" class="button">Baza wyników</a></li>
 </ul>
 
 

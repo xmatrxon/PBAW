@@ -40,6 +40,24 @@ function &getRouter(): core\Router {
     global $router; return $router;
 }
 
+$db = null;
+function &getDB() {
+    global $conf, $db;
+    if (!isset($db)) {
+        require_once 'lib/medoo/Medoo.php';
+        $db = new \Medoo\Medoo([
+            'database_type' => &$conf->db_type,
+            'server' => &$conf->db_server,
+            'database_name' => &$conf->db_name,
+            'username' => &$conf->db_user,
+            'password' => &$conf->db_pass,
+            'charset' => &$conf->db_charset,
+            'option' => &$conf->db_option
+        ]);
+    }
+    return $db;
+}
+
 require_once 'core/functions.php';
 
 session_start();
